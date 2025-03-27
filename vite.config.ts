@@ -33,7 +33,7 @@ export default ({ mode })=> {
                 // },
             }
         },
-        base: './api/v1',
+        base: './',
         plugins: [
             vue(),
             tailwindcss(),
