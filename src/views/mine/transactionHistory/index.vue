@@ -117,7 +117,7 @@ onMounted(() => {
           <el-table-column prop="game_name" label="项目" align="center"></el-table-column>
           <el-table-column prop="id" label="订单号" align="center"></el-table-column>
           <el-table-column prop="odds_name" label="布局热点" align="center"></el-table-column>
-          <el-table-column prop="address" label="手数" align="center">1</el-table-column>
+          <el-table-column prop="multiple" label="手数" align="center"></el-table-column>
           <el-table-column prop="amount" label="金额(¥)" align="center">
             <template #default="{ row }">
               <span>{{ priceFormat(row.amount) }}</span>

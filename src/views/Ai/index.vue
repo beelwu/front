@@ -91,11 +91,16 @@ const gameBet = async ()=>{
     game_id: Number(route.params.id),
     odds_id: selectType.value.join(','),
     issue_id: issueId.value,
+    multiple: Number(num.value),
     amount: activeNum.value
   })
   if(res.code === 0){
-   showSuccessToast('布局成功')
+   showSuccessToast({
+      message: '投注成功',
+      duration: 2500
+   })
     selectType.value = []
+    num.value = 1
     user_store.changeUserInfo()
   }
 }
@@ -198,7 +203,7 @@ const select=(item)=>{
             {{ user_store.gameName }}
           </div>
           <div class="flex flex-wrap md:!gap-[20px] gap-[10px] mt-[30px] md:justify-center">
-            <div class="text-[14px] bg-[#E9E9E9] md:!bg-[#E9E9E9] cursor-pointer text-[#999] py-[10px] px-[15px] rounded-[10px]" v-for="(item,i) in itemsList" :class="[selectType.includes(item.id) ? '!bg-[#0077FF] text-white' : 'text-[14px]']"  :key="i" @click="select(item)">
+            <div class="text-[14px] bg-[#E9E9E9] cursor-pointer text-[#999] py-[10px] px-[15px] rounded-[10px]" v-for="(item,i) in itemsList" :class="[selectType.includes(item.id) ? '!bg-[#0077FF] text-white' : 'text-[14px]']"  :key="i" @click="select(item)">
               {{item.name}}
             </div>
           </div>
