@@ -88,13 +88,9 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="w-full h-[40px] bg-[#edf5ff] md:block hidden">
+    <div class="w-full h-[40px] bg-[#edf5ff] md:block hidden" v-if="store.token">
         <div class="md:max-w-[1200px] mx-auto flex justify-between items-center px-[10px] md:!px-0">
-          <div class=" text-[14px] leading-[40px]" v-if="!store.token">
-            <span>欢迎来到{{ store.config.config.app_name }}，请</span>
-            <span class="text-[#0077FF] cursor-pointer">登录</span>！
-          </div>
-          <div class=" text-[14px] leading-[40px]" v-else>
+          <div class=" text-[14px] leading-[40px]">
             <span>你好，{{store.userInfo.nickname || store.userInfo.username}}</span>！
           </div>
           <div class="text-[#0077FF] text-[14px]" v-if="store.token">
