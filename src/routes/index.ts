@@ -93,7 +93,7 @@ let routes= [
 ]
 // 路由
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/'),
     routes
 })
 // 导出
