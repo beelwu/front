@@ -3,36 +3,39 @@ import navBar from "@/components/navBar.vue";
 import Header from "@/components/header.vue";
 import {apiWithdraw} from "../../request/api";
 import {userStore} from "../../store/user.store";
-import {showSuccessToast} from "vant";
+import {showFailToast, showSuccessToast} from "vant";
+import { useRouter } from "vue-router";
+const router = useRouter()
+
 const state = userStore()
 const form = reactive({
   name: 'test122',
   money: state.userInfo.balance,
   amount: '',
   withdraw_password: '',
-  type: '1'
+  type: 1
 })
 const options = [
   {
-    value: '2',
+    value: 2,
     label: '银行卡'
   },
   {
-    value: '1',
+    value: 1,
     label: '支付宝'
   }
 ]
 const submit = async ()=>{
   if (!form.amount) {
-    ElMessage.error('请输入提款金额')
+    showFailToast('请输入提款金额')
     return
   }
   if (!form.withdraw_password) {
-    ElMessage.error('请输入提款密码')
+    showFailToast('请输入提款密码')
     return
   }
   if (form.money < form.amount) {
-    ElMessage.error('提款金额不能大于可提款金额')
+    showFailToast('提款金额不能大于可提款金额')
     return
   }
   const params = {
@@ -43,7 +46,7 @@ const submit = async ()=>{
    await apiWithdraw({...params})
   showSuccessToast('已发起申请')
   setTimeout(()=>{
-    $router.go(-1)
+    router.go(-1)
   },1000)
 }
 </script>

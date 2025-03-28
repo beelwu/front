@@ -179,9 +179,9 @@ onMounted(() => {
               align="center"
           >
             <template #default="{row}">
-              <span v-if="row.status == 1">审核中</span>
-              <span v-if="row.status == 2">通过</span>
-              <span v-if="row.status == 3">驳回</span>
+              <el-tag type="primary" v-if="row.status == 1">审核中</el-tag>
+              <el-tag type="success" v-if="row.status == 2">通过</el-tag>
+              <el-tag type="danger" v-if="row.status == 3">驳回</el-tag>
             </template>
           </el-table-column>
           <el-table-column

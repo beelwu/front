@@ -122,6 +122,15 @@ onMounted(async () => {
           </el-table-column>
           <el-table-column
               prop="before"
+              label="金额(¥)"
+              align="center"
+          >
+            <template #default="{row}">
+              <span>{{ priceFormat(row.amount) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              prop="before"
               label="账变前金额(¥)"
               align="center"
           >
