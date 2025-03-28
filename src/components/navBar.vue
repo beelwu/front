@@ -29,6 +29,10 @@ const slideList = ref([
     text: '布局记录',
     path: '/mine/transactionHistory'
   },{
+    icon: headImg3,
+    text: '代理统计',
+    path: '/agent'
+  },{
     icon: headImg5,
     text: '平台公告'
   },{

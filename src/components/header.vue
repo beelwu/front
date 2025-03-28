@@ -39,6 +39,10 @@ const slideList = ref([
     text: '账变记录',
     path: '/mine/accountRecords'
   },{
+    icon: headImg3,
+    text: '代理统计',
+    path: '/agent'
+  },{
     icon: headImg4,
     text: '布局记录',
     path: '/mine/transactionHistory'
@@ -118,6 +122,7 @@ onMounted(() => {
         <div class="justify-between md:flex items-center hidden text-[16px]" v-else style="font-weight: 400;height: 60px">
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'home'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/')">首页</div>
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" style="">存款优惠</div>
+          <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'Agent'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/agent')">代理统计</div>
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'Ai'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/ai/'+store.gameId)">布局大厅</div>
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'mine'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/mine')">个人中心</div>
         </div>

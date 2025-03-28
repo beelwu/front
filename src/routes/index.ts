@@ -80,6 +80,11 @@ let routes= [
         component: () => import('../views/Ai/index.vue')
     },
     {
+        path: '/agent',
+        name: 'Agent',
+        component: () => import('../views/agent/index.vue')
+    },
+    {
         path: '/message',
         name: 'message',
         component: () => import('../views/message/index.vue')

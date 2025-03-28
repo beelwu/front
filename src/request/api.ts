@@ -54,3 +54,18 @@ export const apiMessageList = (params) => request.get('/message/page_list', {par
 
 // 开奖信息
 export const apiPrizeList = (params) => request.get('/game/result', {params})
+
+// 创建下级
+export const agentCreateApi = (data) => request.post('/agent/create', data)
+// 代理总览
+export const agentDashboardApi = (params) => request.get('/agent/dashboard', {params})
+// 代理首页
+export const agentIndexdApi = (params) => request.get('/agent/index', {params})
+// 下级投注记录
+export const agentRecordApi = (params) => request.get('/agent/record', {params})
+// 下级报表
+export const agentReportApi = (params) => request.get('/agent/report', {params})
+// 下级账变记录
+export const agentTradeApi = (params) => request.get('/agent/trade', {params})
+// 下级提现记录
+export const agentWithdrawApi = (params) => request.get('/agent/withdraw', {params})
