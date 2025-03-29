@@ -17,7 +17,9 @@ const depositContent = ref('')
 const getBanner = async () => {
   const res = await apiBanner()
   bannerList.value = res.data.banner
-  noticeTxt.value = res.data.notice.roll.content
+  if(res.data.notice.roll.content) {
+    noticeTxt.value = res.data.notice.roll.content.replace(/<[^>]*>/g, '');
+  }
   depositContent.value = res.data.notice.pop
 }
 const depositShow = computed(() => store.depositFlag)
@@ -195,4 +197,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
 </style>
