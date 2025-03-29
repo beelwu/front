@@ -13,12 +13,14 @@ const noticeTxt = ref('')
 const gameId = ref(store.gameId)
 const router = useRouter()
 const imgOrigin = import.meta.env.MODE === 'development' ? 'https://web.czbcw.com' : window.location.origin
+const depositContent = ref('')
 const getBanner = async () => {
   const res = await apiBanner()
   bannerList.value = res.data.banner
   noticeTxt.value = res.data.notice.roll.content
-  console.log( noticeTxt.value)
+  depositContent.value = res.data.notice.pop
 }
+const depositShow = computed(() => store.depositFlag)
 const serviceLink = store.config.customer[0].link
 const openService = () => {
   showDialog({
@@ -50,6 +52,9 @@ const goMessage = () => {
     return showFailToast('请先登录')
   }
   router.push('/message')
+}
+const closeDeposit = () => {
+  store.depositFlag = false
 }
 onMounted(() => {
   getBanner()
@@ -172,10 +177,22 @@ onMounted(() => {
         copyright © 2025 版权归属声明：所有版权归国际声通所有，违者必究！
       </div>
     </div>
+    <van-overlay :show="depositShow" :lock-scroll="false">
+      <div class="flex justify-center items-center h-full">
+        <div class="md:!w-[500px] bg-white rounded-xl px-[10px] relative" >
+          <div class="text-center w-[200px] h-[48px] font-bold text-[18px] mx-auto top-bg mt-[-5px]">
+            <img src="@/assets/images/promo_title.png">
+          </div>
+          <div class="text-[14px] mb-[80px] py-[20px]" v-html="depositContent.content"></div>
+          <div class="flex justify-center items-center h-[40px] w-2/3 hover:bg-[#005EFF] text-white text-[15px] cursor-pointer absolute left-0 bottom-[15px] right-0 mx-auto rounded-4xl bg-[#009DFF]" @click="closeDeposit">
+            我知道了
+          </div>
+        </div>
+      </div>
+    </van-overlay>
     <TabBar :active="0"/>
   </div>
 </template>
 
 <style scoped>
-
 </style>

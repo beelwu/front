@@ -14,7 +14,9 @@ import headImg7 from "@/assets/images/mine/home-icon-7.png"
 import {showDialog, showLoadingToast} from "vant";
 import {apiGameList} from "@/request/api";
 import {priceFormat} from "@/utils";
-import {isMobile} from "../utils";
+import {dateFormat, isMobile} from "../utils";
+import {reactive} from "vue";
+import {noticeListApi} from "../request/api";
 const imgOrigin = import.meta.env.MODE === 'development' ? 'https://web.czbcw.com' : window.location.origin
 const routerName = ref('')
 watch(
@@ -48,7 +50,8 @@ const slideList = ref([
     path: '/mine/transactionHistory'
   },{
     icon: headImg5,
-    text: '平台公告'
+    text: '站内信',
+    path: '/message'
   },{
     icon: headImg6,
     text: '刷新应用'
@@ -69,6 +72,10 @@ const changePath = (item) => {
     router.push('/')
     return
   }
+  if (item.text === '刷新应用') {
+    window.location.reload()
+    return
+  }
   router.push(item.path)
 }
 const serviceLink = store.config.customer[0].link
@@ -84,9 +91,45 @@ const openService = () => {
     window.open(serviceLink, '_blank')
   })
 }
+const noticeShow = ref(false)
+const noticeTotal = ref(0)
+const noticeParams = reactive({
+  page: 1,
+  page_size: 10
+})
+const noticeList = ref([])
 
+const getNotice = async () => {
+  const res = await noticeListApi(noticeParams)
+  noticeList.value = res.data.list
+  noticeTotal.value = res.data.page.total
+}
+const changeNoticePage = (val) => {
+  noticeParams.page = val
+  getNotice()
+}
+const noticeFlag = ref(false)
+const noticeDetail = ref({})
+const goDetail = (row) => {
+  noticeFlag.value = true
+  noticeDetail.value = row
+}
+const closeNotice = () => {
+  noticeShow.value = false
+  noticeFlag.value = false
+  noticeDetail.value = {}
+}
+const goOut = () => {
+  store.logout()
+  router.push('/')
+}
+const openDeposit = () => {
+  store.changeDepositFlag(true)
+}
 onMounted(() => {
-
+  if (store.token) {
+    getNotice()
+  }
 })
 </script>
 
@@ -104,7 +147,7 @@ onMounted(() => {
               </div>
               <div class="w-[64px] text-center cursor-pointer" style="line-height: 36px;" @click="openService">充值</div>
               <div class="w-[64px] text-center cursor-pointer" style="line-height: 36px;" @click="$router.push('/withdrawal')">提现</div>
-              <div class="w-[64px] text-center cursor-pointer text-[#FF2828]" style="line-height: 36px" @click="store.logout()">登出</div>
+              <div class="w-[64px] text-center cursor-pointer text-[#FF2828]" style="line-height: 36px" @click="goOut">登出</div>
             </div>
           </div>
         </div>
@@ -121,9 +164,11 @@ onMounted(() => {
         </div>
         <div class="justify-between md:flex items-center hidden text-[16px]" v-else style="font-weight: 400;height: 60px">
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'home'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/')">首页</div>
-          <div class="w-[100px] text-center cursor-pointer h-full leading-20" style="">存款优惠</div>
+          <div class="w-[100px] text-center cursor-pointer h-full leading-20" style="" @click="openDeposit">存款优惠</div>
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'Agent'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/agent')">代理统计</div>
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'Ai'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/ai/'+store.gameId)">布局大厅</div>
+          <div class="w-[100px] text-center cursor-pointer h-full leading-20" @click="noticeShow = true">系统公告</div>
+          <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'helpCenter'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/helpCenter')">帮助中心</div>
           <div class="w-[100px] text-center cursor-pointer h-full leading-20" :style="routerName == 'mine'&&'background:linear-gradient(#0077FF00, #0077FF1A);border-bottom:2px solid #0077FF;color:#0077FF ' " @click="$router.push('/mine')">个人中心</div>
         </div>
         <div class="flex gap-4 md:hidden">
@@ -163,6 +208,74 @@ onMounted(() => {
         </div>
       </div>
     </van-popup>
+    <van-overlay :show="noticeShow" :lock-scroll="false">
+      <div class="!w-full !h-full flex justify-center items-center">
+        <div class="popup_bg bg-white rounded-[10px] md:!w-[800px] w-9/10">
+          <div class="text-[24px] font-bold flex items-center justify-between p-[20px]">
+            系统公告
+            <el-icon size="28" color="#000" class="cursor-pointer" @click="closeNotice"><IEpClose/></el-icon>
+          </div>
+          <div v-if="!noticeFlag">
+            <div class="md:text-[14px] my-[10px]" v-if="noticeList.length">
+              <el-table
+                  :data="noticeList"
+                  style="width: 100%; table-layout: auto;" class="!text-[12px] " empty-text="暂无系统公告" :header-cell-style=" { 'text-align': 'center' }">
+                <el-table-column
+                    prop="id"
+                    label="#"
+                    align="center"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="create_time"
+                    label="时间"
+                    align="center"
+                >
+                  <template #default="{row}">
+                    <span>{{ dateFormat(row.create_time) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                    prop="title"
+                    label="标题"
+                    align="center"
+                ></el-table-column>
+                <el-table-column fixed="right" label="操作" min-width="80" align="center">
+                  <template #default="{row}">
+                    <el-button link type="primary" size="small" @click="goDetail(row)">
+                      查看
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="mb-[10px]" v-if="noticeTotal>10">
+              <van-pagination class="mt-[10px]" v-model="noticeParams.page" :page-count="noticeTotal" mode="simple"
+                              @change="changeNoticePage" />
+            </div>
+          </div>
+          <div class="md:text-[14px]" v-else>
+            <div class="flex items-center h-[40px] bg-[#CFD9ED] relative px-[10px]">
+              <el-icon size="18px" class="cursor-pointer !absolute left-[10px]" color="#0077FF" @click="noticeFlag = false"><IEpArrowLeftBold /></el-icon>
+              <div class="text-[#666666] text-[14px] md:text-[18px] mx-auto px-[15px] md:py-[20px]">
+                公告详情
+              </div>
+            </div>
+            <div>
+              <div class="text-[20px] text-[#333] text-center py-[10px]">
+                {{ noticeDetail.title }}
+              </div>
+              <div class="text-[#999999] text-[16px] text-center">
+                {{ dateFormat(noticeDetail.create_time) }}
+              </div>
+              <div class="p-[20px] text-[16px]">
+                <div v-html="noticeDetail.content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 

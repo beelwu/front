@@ -2,9 +2,10 @@
 import PcHeader from "@/components/pcHeader.vue";
 import navBar from "@/components/navBar.vue";
 import Header from "@/components/header.vue";
-import {apiBetRecord, apiRechargeList} from "../../../request/api";
+import {apiBetRecord, apiRechargeList, cancelOrderApi} from "../../../request/api";
 import {reactive} from "vue";
 import {dateFormat, formatDate, priceFormat} from "../../../utils";
+import {showSuccessToast} from "vant";
 // 获取当前月份
 const currentMonth = ref(new Date().getMonth());
 // 获取当前年份
@@ -54,6 +55,12 @@ const changeStatus = (val)=>{
   params.status = val
   params.page = 1
   getBetRecord()
+}
+
+const cancelOrder = async (row)=>{
+  const res = await cancelOrderApi({id: row.id})
+  showSuccessToast('撤单成功')
+  await getBetRecord()
 }
 onMounted(() => {
   getBetRecord()
@@ -123,9 +130,18 @@ onMounted(() => {
               <span>{{ priceFormat(row.amount) }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="result_name" label="热点分红" align="center">
+          </el-table-column>
           <el-table-column prop="draw_amount" label="盈亏(¥)" align="center">
             <template #default="{ row }">
               <span>{{ priceFormat(row.draw_amount) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" min-width="80" align="center">
+            <template #default="{row}">
+              <el-button link type="primary" :disabled="row.status == 1" size="small" @click="cancelOrder(row)">
+                撤单
+              </el-button>
             </template>
           </el-table-column>
         </el-table>

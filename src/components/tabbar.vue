@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {userStore} from "../store/user.store";
 import {showFailToast} from "vant";
-import {apiBanner} from "@/request/api";
 const store = userStore()
 const props = defineProps({
   active: {
@@ -16,16 +15,10 @@ const goService = () => {
   }
   window.open(serviceLink, '_blank')
 }
-const show = ref(false)
-const noticePop = ref({})
-const getBanner = async () => {
-  const res = await apiBanner()
-  noticePop.value = res.data.notice.pop
-  console.log( noticePop.value)
+const openDeposit = () => {
+  store.changeDepositFlag(true)
 }
-onMounted(() => {
-  getBanner()
-})
+
 </script>
 
 <template>
@@ -38,7 +31,7 @@ onMounted(() => {
           <img src="@/assets/images/tabber/home.png" alt="" v-else>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item @click="show=true">
+      <van-tabbar-item @click="openDeposit">
         <span>存款优惠</span>
         <template #icon>
           <img src="@/assets/images/tabber/ck-act.png" alt="" v-if="props.active==1">
@@ -67,22 +60,8 @@ onMounted(() => {
         </template>
       </van-tabbar-item>
     </van-tabbar>
-    <van-overlay :show="show" @click="show = false">
-      <div class="flex justify-center items-center h-full relative">
-        <div class="w-3/4 h-[400px] bg-white rounded-xl border-[#1e78f1] border-2 relative p-[10px]" >
-            <div class="text-center font-bold text-[18px]">
-              {{ noticePop.title }}
-            </div>
-            <div class="text-[14px] mt-[10px]" v-html="noticePop.content"></div>
-        </div>
-      </div>
-    </van-overlay>
   </div>
 </template>
 
 <style scoped>
-.bg{
-  background: url("@/assets/images/tz.png") no-repeat;
-  background-size: 100% 100%;
-}
 </style>

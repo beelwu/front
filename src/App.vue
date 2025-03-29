@@ -2,8 +2,13 @@
 import {userStore} from "@/store/user.store";
 import { createWebSocket } from "@/scoket";
 const store = userStore()
-
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
+watch(() => store.token, async () => {
+  if (store.token) {
+    await store.changeUserInfo()
+    await createWebSocket(store.gameId, store.wsId)
+  }
+})
 onMounted(async () => {
   store.changeConfig()
   if (store.token) {

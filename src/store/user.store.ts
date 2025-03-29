@@ -9,9 +9,9 @@ export const userStore: any = defineStore('user', {
             token: "",
             balance: 0,
             wsId:'',
-            prizeList: {},
             gameId: 0,
             gameName:'',
+            depositFlag:false,
             userInfo: {
                 balance: 0,
                 id: 0,
@@ -46,9 +46,8 @@ export const userStore: any = defineStore('user', {
             this.config = data
         },
         // socket连接状态
-        changeSocket(data){
-            this.prizeList = data
-            console.log(this.prizeList,"接收到的数据")
+        changeDepositFlag(data){
+            this.depositFlag = data
         },
         // 退出登录
         logout() {

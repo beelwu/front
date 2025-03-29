@@ -69,3 +69,7 @@ export const agentReportApi = (params) => request.get('/agent/report', {params})
 export const agentTradeApi = (params) => request.get('/agent/trade', {params})
 // 下级提现记录
 export const agentWithdrawApi = (params) => request.get('/agent/withdraw', {params})
+// 公告列表
+export const noticeListApi = (params) => request.get('/notice/page_list', {params})
+// 撤单
+export const cancelOrderApi = (data) => request.post('/game/order/cancel', data)

@@ -9,7 +9,7 @@ const router = useRouter()
 
 const state = userStore()
 const form = reactive({
-  name: 'test122',
+  name: state.userInfo.username,
   money: state.userInfo.balance,
   amount: '',
   withdraw_password: '',
@@ -38,6 +38,15 @@ const submit = async ()=>{
     showFailToast('提款金额不能大于可提款金额')
     return
   }
+  if (form.amount < state.config.config.withdraw_min_amount) {
+    showFailToast('提款金额不能小于最小提款额')
+    return
+  }
+  if (form.amount > state.config.config.withdraw_max_amount) {
+    showFailToast('提款金额不能大于最大提款额')
+    return
+  }
+  console.log(state.config.config.withdraw_min)
   const params = {
     amount: form.amount,
     withdraw_password: form.withdraw_password,
@@ -98,8 +107,13 @@ const submit = async ()=>{
             />
           </el-select>
         </el-form-item>
+        <div>
+          <div class="text-[12px] text-[#999999]">*提款金额不能小于最小提款额{{ state.config.config.withdraw_min_amount }}元</div>
+          <div class="text-[12px] text-[#999999] py-[3px]">*提款金额不能大于最大提款额{{ state.config.config.withdraw_max_amount }}元</div>
+          <div class="text-[12px] text-[#999999]">*每日最大提款次数{{ state.config.config.withdraw_count }}次</div>
+        </div>
         <el-form-item>
-          <div class="w-[100px] h-[36px] bg-[#0077FF] text-white text-[14px] text-center mx-auto rounded-xl cursor-pointer" style="line-height: 36px" @click="submit">确认</div>
+          <div class="w-[100px] mt-[10px] h-[36px] bg-[#0077FF] text-white text-[14px] text-center mx-auto rounded-xl cursor-pointer" style="line-height: 36px" @click="submit">确认</div>
         </el-form-item>
       </el-form>
     </div>

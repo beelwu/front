@@ -34,7 +34,8 @@ const slideList = ref([
     path: '/agent'
   },{
     icon: headImg5,
-    text: '平台公告'
+    text: '站内信',
+    path: '/message'
   },{
     icon: headImg6,
     text: '刷新应用'
@@ -70,6 +71,10 @@ const changePath = (item) => {
     router.push('/')
     return
   }
+  if (item.text === '刷新应用') {
+    window.location.reload()
+    return
+  }
   router.push(item.path)
 }
 </script>
@@ -91,15 +96,25 @@ const changePath = (item) => {
   <van-popup v-model:show="tabShow" class="w-2/3 h-full" position="right">
     <div class="p-[20px]">
       <div class="w-[228px] h-[92px] mine-login box-border px-[15px] py-[20px] flex flex-col justify-between">
-        <div class="text-[14px] text-white">
+        <div class="text-[14px] text-white" v-if="store.token">
           账号：{{store.userInfo.nickname || store.userInfo.username}}
         </div>
-        <div class="text-[14px] text-white">
+        <div class="text-[14px] text-white" v-if="store.token">
           账户余额：
           <span class="text-[16px]">{{ priceFormat(store.balance) }}</span>
         </div>
+        <div class="flex flex-col justify-between h-full" v-if="!store.token">
+          <div class="text-[14px] text-white">
+            欢迎来到{{ store.config.config.app_name }}，请
+            <span class="text-[#07c160] cursor-pointer font-bold" @click="$router.push('/login')">登录</span>！
+          </div>
+          <div class="text-[12px] text-white">
+            还没有账号？请
+            <span class="text-[#07c160] cursor-pointer" @click="$router.push('/register')">注册</span>！
+          </div>
+        </div>
       </div>
-      <div class="pl-[20px]">
+      <div class="pl-[20px]" v-if="store.token">
         <div class="flex gap-[8px] items-center my-[32px]" v-for="(item,index) in slideList" :key="index" @click="changePath(item)">
           <img :src="item.icon" class="w-[20px]" />
           <span>{{ item.text }}</span>

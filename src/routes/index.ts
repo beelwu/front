@@ -88,6 +88,11 @@ let routes= [
         path: '/message',
         name: 'message',
         component: () => import('../views/message/index.vue')
+    },
+    {
+        path: '/helpCenter',
+        name: 'helpCenter',
+        component: () => import('../views/helpCenter/index.vue')
     }
     //{
     //配置404页面
