@@ -16,8 +16,9 @@ const imgOrigin = import.meta.env.MODE === 'development' ? 'https://web.czbcw.co
 const getBanner = async () => {
   const res = await apiBanner()
   bannerList.value = res.data.banner
-  noticeTxt.value = res.data.notice.roll.content
-  console.log( noticeTxt.value)
+  if(res.data.notice.roll.content) {
+    noticeTxt.value = res.data.notice.roll.content.replace(/<[^>]*>/g, '');
+  }
 }
 const serviceLink = store.config.customer[0].link
 const openService = () => {
