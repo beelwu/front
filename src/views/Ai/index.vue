@@ -6,10 +6,11 @@ import {apiBet, apiBetRecord, apiGameDetail} from "@/request/api";
 import { useRoute } from "vue-router";
 import { userStore } from "@/store/user.store";
 import { lotteryStore } from "@/store/item";
-import { reactive, ref, watch, computed} from "vue";
+import { reactive, ref, watch, computed, onUnmounted} from "vue";
 import Header from "@/components/header.vue";
 import {apiPrizeList} from "../../request/api";
 import {showSuccessToast} from "vant";
+import { createWebSocket, websocketClose } from "@/scoket";
 const user_store = userStore()
 const store = lotteryStore()
 
@@ -133,10 +134,12 @@ const moreResult = () => {
   prizeParams.limit += 10
   getPrizeList()
 }
-onMounted(()=>{
+onMounted(async ()=>{
   getGame(route.params.id || 1)
   getBetRecord()
   getPrizeList()
+  await user_store.changeUserInfo()
+  await createWebSocket(user_store.gameId, user_store.wsId)
 })
 const select=(item)=>{
   if (selectType.value.includes(item.id)) {
@@ -145,6 +148,9 @@ const select=(item)=>{
     selectType.value.push(item.id)
   }
 }
+onUnmounted(() => {
+  websocketClose()
+}) 
 </script>
 
 <template>

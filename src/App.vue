@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import {userStore} from "@/store/user.store";
-import { createWebSocket } from "@/scoket";
+// import { createWebSocket } from "@/scoket";
 const store = userStore()
 import {onMounted, watch} from "vue";
 watch(() => store.token, async () => {
   if (store.token) {
     await store.changeUserInfo()
-    await createWebSocket(store.gameId, store.wsId)
+    // await createWebSocket(store.gameId, store.wsId)
   }
 })
 onMounted(async () => {
   store.changeConfig()
   if (store.token) {
    await store.changeUserInfo()
-   await createWebSocket(store.gameId, store.wsId)
+  //  await createWebSocket(store.gameId, store.wsId)
   }
 })
 // import { useItemStore } from "@/store/item";
