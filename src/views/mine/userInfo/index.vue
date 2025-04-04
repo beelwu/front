@@ -60,7 +60,7 @@ const upDataUserInfo = async () => {
       </div>
       <van-cell-group inset class="bg-white !my-[15px] block ">
         <van-cell title="会员账户" class="md:!bg-[#F5F9FF]" :value="store.userInfo.username" />
-        <van-cell title="会员昵称" class="md:!bg-[#F5F9FF]" :value="store.userInfo.nickname || '未设置'" is-link  @click="openDialog('1')"/>
+        <van-cell title="会员昵称" class="md:!bg-[#F5F9FF]" :value="store.userInfo.nickname || '未设置'" is-link  @click="!store.userInfo.nickname && openDialog('1')"/>
         <van-cell title="预留信息" class="md:!bg-[#F5F9FF]" is-link  @click="openDialog('2')"/>
         <van-cell title="可用余额" class="md:!bg-[#F5F9FF]" :value="'¥'+priceFormat(store.balance)" />
       </van-cell-group>
